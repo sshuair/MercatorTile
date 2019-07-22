@@ -19,6 +19,13 @@ struct LngLat
     float lat;
 };
 
+// A x and y pair of web mercator
+struct XY
+{
+    float x;
+    float y;
+};
+
 // A geographic bounding box
 struct LngLatBbox
 {
@@ -42,15 +49,22 @@ struct Bbox
 void truncate_lonlat(float *lng, float *lat);
 
 // Returns the upper left longitude and latitude of a tile
-void ul(const Tile &tile, LngLat *lonlat);
+LngLat ul(const Tile &tile);
 
-void bounds(const Tile &tile, LngLatBbox *llbbox);
+// Get the lonlat bounding box of a tile
+LngLatBbox bounds(const Tile &tile);
 
 // Convert longtitude and latitude to web mercator x, y.
-void xy(const float &lng, const float &lat, float *x, float *y);
+XY xy(const float &lng, const float &lat);
 
 // Convert  web mercator x, y to longtitude and latitude.
-void lonlat(const float &x, const float &y, float *lng, float *lat);
+LngLat lonlat(const float &x, const float &y);
+
+// Get the web mercator bounding box of a tile
+Bbox xy_bounds(const Tile &tile);
+
+// Get the tile containing a longitude and latitude
+Tile tile(const float &lng, const float &lat, const int &zoom);
 
 
 
