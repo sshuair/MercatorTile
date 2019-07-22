@@ -39,16 +39,19 @@ void ul(const Tile & tile, LngLat *lonlat)
 };
 
 
-// void bounds(const Tile & tile, LngLatBbox *llbbox)
-// {
-//     Tile tile_right
-//     LngLat lnglat_ul;
-//     LngLat lnglat_br;
-//     ul(tile, lnglat_ul);
-//     ul(tile, lnglat_br);
-//     llbbox->west = lnglat_ul.lng;
-//     llbbox->west = lnglat_ul.lng;
-// };
+void bounds(const Tile & tile, LngLatBbox *llbbox)
+{
+    Tile tile_br = {tile.x+1, tile.y+1, tile.z};
+    LngLat lnglat_ul;
+    LngLat lnglat_br;
+    mercatortile::ul(tile, &lnglat_ul);
+    mercatortile::ul(tile_br, &lnglat_br);
+    llbbox->west = lnglat_ul.lng;
+    llbbox->south = lnglat_br.lat;
+    llbbox->east = lnglat_br.lng;
+    llbbox->north = lnglat_ul.lat;
+};
+
 
 void xy(const float &lng, const float &lat, float *x, float *y)
 {
@@ -69,6 +72,11 @@ void xy(const float &lng, const float &lat, float *x, float *y)
     };
 };
 
+
+def xy_bounds(const Tile &tile, Bbox *bbox)
+{
+    
+}
 
 void lnglat(const float &x, const float &y, float *lng, float *lat)
 {
