@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include <vector>
+#include <string>
 
 
 using namespace std;
@@ -30,7 +31,7 @@ void truncate_lonlat(float *lng, float *lat)
 };
 
 
-LngLat ul(const Tile & tile)
+LngLat ul(const Tile &tile)
 {
     LngLat lonlat;
     float n = pow(2.0f, tile.z);
@@ -42,7 +43,7 @@ LngLat ul(const Tile & tile)
 };
 
 
-LngLatBbox bounds(const Tile & tile)
+LngLatBbox bounds(const Tile &tile)
 {
     LngLatBbox bound;
     Tile tile_br = {tile.x+1, tile.y+1, tile.z};
@@ -93,7 +94,7 @@ Bbox xy_bounds(const Tile &tile)
     bbox.bottom = lnglat_br.lat;
 
     return bbox;
-}
+};
 
 
 LngLat lnglat(const float &x, const float &y)
@@ -123,8 +124,68 @@ Tile tile(const float &lng, const float &lat, const int &zoom)
     out_tile.z = zoom;
 
     return out_tile;
-}
+};
 
+Tile parent(const Tile &tile)
+{
+    int target_zoom = tile.z - 1;
+    Tile return_tile;
+    if (tile.x % 2 == 0 && tile.y % 2 == 0)
+    {
+        return_tile = Tile {tile.x/2, tile.y/2, target_zoom};
+    }
+    else if (tile.x % 2 == 0)
+    {
+        return_tile = Tile {tile.x/2, (tile.y-1)/2, target_zoom};
+    }
+    else if (!(tile.x % 2 ==0) && (tile.y % 2 == 0))
+    {
+        return_tile = Tile {(tile.x-1)/2, tile.y/2, target_zoom};
+    }
+    else
+    {
+        return_tile = Tile {(tile.x-1)/2, (tile.y-1)/2, target_zoom};
+    }
+
+    return return_tile;
+};
+
+Tile parent(const Tile &tile, const int &zoom)
+{
+    if (tile.z < zoom)
+    {
+        throw "zoom should be less than tile zoom level.";
+    }
+    Tile return_tile = tile;
+    while (return_tile.z > zoom)
+    {
+        if (return_tile.x % 2 == 0 && return_tile.y % 2 == 0)
+        {
+            return_tile = Tile {return_tile.x/2, return_tile.y/2, return_tile.z-1};
+        }
+        else if (return_tile.x % 2 == 0)
+        {
+            return_tile = Tile {return_tile.x/2, (return_tile.y-1)/2, return_tile.z-1};
+        }
+        else if (!(return_tile.x % 2 ==0) && (return_tile.y % 2 == 0))
+        {
+            return_tile = Tile {(return_tile.x-1)/2, return_tile.y/2, return_tile.z-1};
+        }
+        else
+        {
+            return_tile = Tile {(return_tile.x-1)/2, (return_tile.y-1)/2, return_tile.z-1};
+        }
+    }
+
+    return return_tile;
+    
+};
+
+
+string quadkey(const Tile &tile)
+{
+    return string("a");
+};
 
 } // namespace mercatortile
 

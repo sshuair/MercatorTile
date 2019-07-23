@@ -1,6 +1,9 @@
 #ifndef __MERCANTILE_H_
 #define __MERCANTILE_H_
 
+#include <vector>
+#include <string>
+
 namespace mercatortile{
 
 
@@ -66,7 +69,22 @@ Bbox xy_bounds(const Tile &tile);
 // Get the tile containing a longitude and latitude
 Tile tile(const float &lng, const float &lat, const int &zoom);
 
+// Get the parent of a tile 
+Tile parent(const Tile &tile);
+Tile parent(const Tile &tile, const int &zoom);
+
+// Get the child of a tile
+Tile child(const Tile &tile);
+Tile child(const Tile &tile, const int &zoom);
+
+// Get the tiles intersecting a geographic bounding box
+std::vector<Tile> tiles(const Bbox &bbox, const int &zoom);
+
+// Get the quadkey of a tile
+std::string quadkey(const Tile &tile);
+
 
 
 } //namespace mercatortile
+
 #endif // !__MERCANTILE_H_

@@ -11,7 +11,7 @@ target_include_directories(mercatortile
 )
 
 
-add_executable(main src/main.cpp)
+add_executable(main examples/main.cpp)
 target_link_libraries(main
     PRIVATE
         mercatortile
