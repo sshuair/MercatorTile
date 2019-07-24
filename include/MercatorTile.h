@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <deque>
 
 namespace mercatortile{
 
@@ -74,8 +75,8 @@ Tile parent(const Tile &tile);
 Tile parent(const Tile &tile, const int &zoom);
 
 // Get the child of a tile
-Tile child(const Tile &tile);
-Tile child(const Tile &tile, const int &zoom);
+std::vector<Tile> child(const Tile &tile);
+std::vector<Tile> child(const Tile &tile, const int &zoom);
 
 // Get the tiles intersecting a geographic bounding box
 std::vector<Tile> tiles(const Bbox &bbox, const int &zoom);

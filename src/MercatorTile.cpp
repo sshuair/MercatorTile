@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <string>
 
 
@@ -128,23 +129,22 @@ Tile tile(const float &lng, const float &lat, const int &zoom)
 
 Tile parent(const Tile &tile)
 {
-    int target_zoom = tile.z - 1;
     Tile return_tile;
     if (tile.x % 2 == 0 && tile.y % 2 == 0)
     {
-        return_tile = Tile {tile.x/2, tile.y/2, target_zoom};
+        return_tile = Tile {tile.x/2, tile.y/2, tile.z - 1};
     }
     else if (tile.x % 2 == 0)
     {
-        return_tile = Tile {tile.x/2, (tile.y-1)/2, target_zoom};
+        return_tile = Tile {tile.x/2, (tile.y-1)/2, tile.z - 1};
     }
     else if (!(tile.x % 2 ==0) && (tile.y % 2 == 0))
     {
-        return_tile = Tile {(tile.x-1)/2, tile.y/2, target_zoom};
+        return_tile = Tile {(tile.x-1)/2, tile.y/2, tile.z - 1};
     }
     else
     {
-        return_tile = Tile {(tile.x-1)/2, (tile.y-1)/2, target_zoom};
+        return_tile = Tile {(tile.x-1)/2, (tile.y-1)/2, tile.z - 1};
     }
 
     return return_tile;
@@ -179,6 +179,48 @@ Tile parent(const Tile &tile, const int &zoom)
 
     return return_tile;
     
+};
+
+vector<Tile> child(const Tile &tile)
+{
+    vector<Tile> return_tiles;
+    return_tiles.push_back(Tile {tile.x * 2, tile.y * 2, tile.z+1});
+    return_tiles.push_back(Tile {tile.x * 2 + 1 , tile.y * 2, tile.z+1});
+    return_tiles.push_back(Tile {tile.x * 2, tile.y * 2 + 1, tile.z+1});
+    return_tiles.push_back(Tile {tile.x * 2 + 1, tile.y * 2 + 1, tile.z+1});
+    
+    return return_tiles;
+};
+
+std::vector<Tile> child(const Tile &tile, const int &zoom)
+{
+    if (tile.z > zoom)
+    {
+        throw "zoom should be greater than tile zoom level.";
+    };
+    std::deque<Tile> return_tiles = {tile};
+    while (return_tiles.front().z < zoom)
+    {
+        Tile front_tile = return_tiles.front();
+        return_tiles.pop_front();
+        return_tiles.push_back(Tile {front_tile.x * 2, front_tile.y * 2, front_tile.z+1});
+        return_tiles.push_back(Tile {front_tile.x * 2 + 1 , front_tile.y * 2, front_tile.z+1});
+        return_tiles.push_back(Tile {front_tile.x * 2, front_tile.y * 2 + 1, front_tile.z+1});
+        return_tiles.push_back(Tile {front_tile.x * 2 + 1, front_tile.y * 2 + 1, front_tile.z+1});
+    }
+
+    //TODO: hight memory, not efficiency, or consider anthoer method.
+    vector<Tile> return_vector_tiles(std::make_move_iterator(return_tiles.begin()),
+                                     std::make_move_iterator(return_tiles.end()));
+    // copy(return_tiles.begin(), return_tiles.end(), back_inserter(return_vector_tiles)); 
+
+    return return_vector_tiles;
+};
+
+
+std::vector<Tile> tiles(const Bbox &bbox, const int &zoom)
+{
+
 };
 
 

@@ -1,5 +1,6 @@
 #include "MercatorTile.h"
 #include <iostream>
+#include <deque>
 #include <math.h>
 
 using namespace std;
@@ -10,10 +11,14 @@ using std::endl;
 
 int main(int argc, char const *argv[])
 {
-    Tile aa = tile(120, 40, 10);
-    cout<<aa.x<<endl;
-    cout<<aa.y<<endl;
-    cout<<aa.z<<endl;
+    vector<int> a = {1,2,3,4};
+    cout<<a.front();
+    a.erase(a.begin());
+    for (auto x:a)
+    {
+        std::cout<<x<<endl;
+    }
+    
 
     // float n = pow(2,3);
     // std::cout<<n<<endl;
@@ -52,10 +57,33 @@ int main(int argc, char const *argv[])
     // mercatortile::bounds(tile, &llbbox);
     // cout<<llbbox.west<<"  "<<llbbox.south<<" "<< llbbox.east <<" "<<llbbox.north<<endl;
 // parent
-    Tile tile {230,439,8};
-    Tile parent_tile = mercatortile::parent(tile, 4);
-    cout<<parent_tile.x<<endl;
-    cout<<parent_tile.y<<endl;
-    cout<<parent_tile.z<<endl;
+    // Tile tile {230,439,8};
+    // Tile parent_tile = mercatortile::parent(tile, 4);
+    // cout<<parent_tile.x<<endl;
+    // cout<<parent_tile.y<<endl;
+    // cout<<parent_tile.z<<endl;
+
+// child - 1 level
+    // cout<<"example - [child]: "<<endl;
+    // Tile tile {230,439,8};
+    // vector<Tile> child_tiles = mercatortile::child(tile);
+    // for (const auto &child:child_tiles){
+    //     cout<<child.x<<endl;
+    //     cout<<child.y<<endl;
+    //     cout<<child.z<<endl;
+    //     cout<<endl;
+    // };
+
+// child - n level
+    cout<<"example - [child]: "<<endl;
+    Tile tile {1,1,5};
+    std::vector<Tile> child_tiles = mercatortile::child(tile, 18);
+    for (const auto &child:child_tiles){
+        cout<<child.x<<endl;
+        cout<<child.y<<endl;
+        cout<<child.z<<endl;
+        cout<<endl;
+    };
+
     return 0;
 };
