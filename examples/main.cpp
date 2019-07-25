@@ -2,6 +2,7 @@
 #include <iostream>
 #include <deque>
 #include <math.h>
+#include <numeric>
 
 using namespace std;
 using namespace mercatortile;
@@ -11,18 +12,18 @@ using std::endl;
 
 int main(int argc, char const *argv[])
 {
-    vector<int> a = {1,2,3,4};
-    cout<<a.front();
-    a.erase(a.begin());
-    for (auto x:a)
-    {
-        std::cout<<x<<endl;
-    }
+    // vector<int> a = {1,2,3,4};
+    // cout<<a.front();
+    // a.erase(a.begin());
+    // for (auto x:a)
+    // {
+    //     std::cout<<x<<endl;
+    // }
     
 
     // float n = pow(2,3);
     // std::cout<<n<<endl;
-
+// xy
     // LngLat aa;
     // cout<<aa.lng<<endl;
     // float lng = 120;
@@ -32,25 +33,25 @@ int main(int argc, char const *argv[])
     // mercatortile::xy(lng, lat, &x, &y);
     // std::cout<<x<<std::endl;
     // std::cout<<y<<std::endl;
-
+// truncate_lonlat
     // float truct_lng = 120;
     // float truct_lat = 120;
     // mercatortile::truncate_lonlat(&truct_lng, &truct_lat);
     // std::cout<<truct_lng<<std::endl;
     // std::cout<<truct_lat<<std::endl;
-
+// lonlat
     // float truct_lng = 120;
     // float truct_lat = 120;
     // // mercatortile::lonlat(&x, &y,);
     // std::cout<<truct_lng<<std::endl;
     // std::cout<<truct_lat<<std::endl;
-   
+// ul
     // // check function ul
     // mercatortile::Tile tile = {0,0,1};
     // mercatortile::LngLat lnglat = {0,0};
     // mercatortile::ul(tile, &lnglat);
     // cout<<lnglat.lng<<"  "<<lnglat.lat<<endl;
-
+// bounds
     // check function bounds
     // mercatortile::Tile tile = {0,0,0};
     // mercatortile::LngLatBbox llbbox = {0,0};
@@ -75,15 +76,26 @@ int main(int argc, char const *argv[])
     // };
 
 // child - n level
-    cout<<"example - [child]: "<<endl;
-    Tile tile {1,1,5};
-    std::vector<Tile> child_tiles = mercatortile::child(tile, 18);
+    // cout<<"example - [child]: "<<endl;
+    // Tile tile {1,1,5};
+    // std::vector<Tile> child_tiles = mercatortile::child(tile, 18);
+    // for (const auto &child:child_tiles){
+    //     cout<<child.x<<endl;
+    //     cout<<child.y<<endl;
+    //     cout<<child.z<<endl;
+    //     cout<<endl;
+    // };
+
+// tiles
+
+    cout<<"example - [tiles]: "<<endl;
+    LngLatBbox bbox {121.0, 40.0, 121.1, 40.1};
+    std::vector<Tile> child_tiles = mercatortile::tiles(bbox, 13);
     for (const auto &child:child_tiles){
         cout<<child.x<<endl;
         cout<<child.y<<endl;
         cout<<child.z<<endl;
         cout<<endl;
     };
-
     return 0;
 };
