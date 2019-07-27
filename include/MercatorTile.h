@@ -73,14 +73,18 @@ Tile parent(const Tile &tile);
 Tile parent(const Tile &tile, const int &zoom);
 
 // Get the child of a tile
-std::vector<Tile> child(const Tile &tile);
-std::vector<Tile> child(const Tile &tile, const int &zoom);
+std::vector<Tile> children(const Tile &tile);
+std::vector<Tile> children(const Tile &tile, const int &zoom);
 
 // Get the tiles intersecting a geographic bounding box
 std::vector<Tile> tiles(const LngLatBbox &bbox, const int &zoom);
 
 // Get the quadkey of a tile
 std::string quadkey(const Tile &tile);
+
+// Get the tile corresponding to a quadkey
+Tile quadkey_to_tile(const std::string &qk);
+
 
 } //namespace mercatortile
 

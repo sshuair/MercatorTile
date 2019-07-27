@@ -1,5 +1,6 @@
 #include "MercatorTile.h"
 #include <math.h>
+#include <stdlib.h>
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -173,7 +174,7 @@ Tile parent(const Tile &tile, const int &zoom)
     return return_tile;
 };
 
-vector<Tile> child(const Tile &tile)
+vector<Tile> children(const Tile &tile)
 {
     vector<Tile> return_tiles;
     return_tiles.push_back(Tile{tile.x * 2, tile.y * 2, tile.z + 1});
@@ -184,7 +185,7 @@ vector<Tile> child(const Tile &tile)
     return return_tiles;
 };
 
-std::vector<Tile> child(const Tile &tile, const int &zoom)
+std::vector<Tile> children(const Tile &tile, const int &zoom)
 {
     if (tile.z > zoom)
     {
@@ -256,7 +257,63 @@ std::vector<Tile> tiles(const LngLatBbox &llbbox, const int &zoom)
 
 string quadkey(const Tile &tile)
 {
-    return string("a");
+    string qk;
+    for (int z=tile.z; z>0; z--)
+    {
+        int digit = 0;
+        int mask = 1 << (z-1);
+        if ((tile.x & mask) != 0)
+        {
+            digit++;
+        }
+        if ((tile.y & mask) != 0)
+        {
+            digit++;
+            digit++;
+        }
+        qk.append(std::to_string(digit));
+    }
+
+    return qk;
 };
+
+
+Tile quadkey_to_tile(const std::string &qk)
+{
+    int zoom = qk.length();
+    if (zoom == 0)
+    {
+        return Tile{0,0,0};
+    } 
+    int xtile = 0;
+    int ytile = 0;
+    for (int i = zoom; i>0; i--)
+    {
+        int mask = 1 << (zoom-i);
+        cout<<mask<<endl;
+        int digit = qk[i-1]-'0';
+        switch (digit)
+        {
+            
+            case 0:
+                break;
+            case 1:
+                xtile = xtile | mask;
+                break;
+            case 2:
+                ytile = ytile | mask;
+                break;
+            case 3:
+                xtile = xtile | mask;
+                ytile = ytile | mask;
+                break;
+            default:
+                cout<< "Unexpected quadkey digit."<<endl;
+                break;
+        }
+    }
+    
+    return Tile{xtile, ytile, zoom};
+}
 
 } // namespace mercatortile

@@ -10,19 +10,20 @@ using namespace mercatortile;
 using std::cout;
 using std::endl;
 
+void print(const std::string& input)
+{
+    cout << input[4] << endl;
+}
+
 int main(int argc, char const *argv[])
 {
-    // vector<int> a = {1,2,3,4};
-    // cout<<a.front();
-    // a.erase(a.begin());
-    // for (auto x:a)
-    // {
-    //     std::cout<<x<<endl;
-    // }
-    
 
-    // float n = pow(2,3);
-    // std::cout<<n<<endl;
+    print("1233445");
+// ul
+    cout<<"example - [ul] .........."<<endl;
+    LngLat ul_result = ul(Tile{3425, 1549, 12});
+    cout<<"lng: "<<ul_result.lng<<" lat:"<<ul_result.lat<<"\n"<<endl;
+
 // xy
     // LngLat aa;
     // cout<<aa.lng<<endl;
@@ -87,8 +88,7 @@ int main(int argc, char const *argv[])
     // };
 
 // tiles
-
-    cout<<"example - [tiles]: "<<endl;
+    cout<<"example - [tiles] .........."<<endl;
     LngLatBbox bbox {121.0, 40.0, 121.1, 40.1};
     std::vector<Tile> child_tiles = mercatortile::tiles(bbox, 13);
     for (const auto &child:child_tiles){
@@ -97,5 +97,16 @@ int main(int argc, char const *argv[])
         cout<<child.z<<endl;
         cout<<endl;
     };
+
+// quadkey
+    cout<<"example - [quadkey] .........."<<endl;
+    string quad_key = mercatortile::quadkey(Tile{3425, 1549, 12});
+    cout<<quad_key<<endl;
+
+// quadkey_to_tile
+    cout<<"example - [quadkey_to_tile] .........."<<endl;
+    Tile quad_key_tile = mercatortile::quadkey_to_tile("132101102203");
+    cout<<quad_key_tile.x<<" "<<quad_key_tile.y<<" "<<quad_key_tile.z<<endl;
+
     return 0;
 };
