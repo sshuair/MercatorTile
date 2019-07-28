@@ -4,7 +4,7 @@ Spherical mercator tile and coordinate utilities for [C++](https://en.cppreferen
 
 The tools provides `ul` function that return the upper left corner longitudes and latitudes, a `bounds` function return the bounding longitudes and latitudes, a `xy` function that return the spherical mercator x and y coordinates, a `tile` function that returns the tile containing a given point. And lots of other usful functions.
 
-You can check out the [Utility Functions](#utility-functions) or [examples](./examples/main.cpp).
+You can check out the [Utility Functions](#utility-functions) or [examples](./examples/example.cpp).
 
 
 # Install
