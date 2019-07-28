@@ -12,7 +12,7 @@ using namespace std;
 namespace mercatortile
 {
 
-void truncate_lonlat(float *lng, float *lat)
+void truncate_lonlat(double *lng, double *lat)
 {
     if (*lng > 180.0)
     {
@@ -36,10 +36,10 @@ void truncate_lonlat(float *lng, float *lat)
 LngLat ul(const Tile &tile)
 {
     LngLat lonlat;
-    float n = pow(2.0f, tile.z);
-    float lat_rad = atan(sinh(M_PI * (1.0f - 2.0f * tile.y / n)));
-    lonlat.lat = lat_rad * 180.0f / M_PI;
-    lonlat.lng = tile.x / n * 360.0f - 180.0f;
+    double n = pow(2.0, tile.z);
+    double lat_rad = atan(sinh(M_PI * (1.0 - 2.0 * tile.y / n)));
+    lonlat.lat = lat_rad * 180.0 / M_PI;
+    lonlat.lng = tile.x / n * 360.0 - 180.0;
 
     return lonlat;
 };
@@ -47,33 +47,33 @@ LngLat ul(const Tile &tile)
 LngLatBbox bounds(const Tile &tile)
 {
     LngLatBbox bound;
-    Tile tile_br = {tile.x + 1, tile.y + 1, tile.z};
     LngLat lnglat_ul = ul(tile);
-    LngLat lnglat_br = ul(tile_br);
     bound.west = lnglat_ul.lng;
+    bound.north = lnglat_ul.lat;
+    
+    Tile tile_br = {tile.x + 1, tile.y + 1, tile.z};
+    LngLat lnglat_br = ul(tile_br);
     bound.south = lnglat_br.lat;
     bound.east = lnglat_br.lng;
-    bound.north = lnglat_ul.lat;
 
     return bound;
 };
 
-XY xy(const float &lng, const float &lat)
+XY xy(const double &lng, const double &lat)
 {
     XY out;
     out.x = 6378137.0 * (M_PI * lng / 180);
     if (lat <= -90)
     {
-        out.y = float(123);
+        out.y = double(123);
     }
     else if (lat >= 90)
     {
-        out.y = float(123);
+        out.y = double(123);
     }
     else
     {
-        out.y = 6378137.0 * log(
-                                tan((M_PI * 0.25) + (0.5 * (M_PI * lat / 180))));
+        out.y = 6378137.0 * log(tan((M_PI * 0.25) + (0.5 * (M_PI * lat / 180))));
     };
     return out;
 };
@@ -83,34 +83,36 @@ Bbox xy_bounds(const Tile &tile)
     Bbox bbox;
 
     LngLat lnglat_ul = ul(tile);
-    bbox.left = lnglat_ul.lng;
-    bbox.top = lnglat_ul.lat;
+    XY xy_ul = xy(lnglat_ul.lng, lnglat_ul.lat);
+    bbox.left = xy_ul.x;
+    bbox.top = xy_ul.y;
 
     Tile tile_br = {tile.x + 1, tile.y + 1, tile.z};
     LngLat lnglat_br = ul(tile_br);
-    bbox.right = lnglat_br.lng;
-    bbox.bottom = lnglat_br.lat;
+    XY xy_br = xy(lnglat_br.lng, lnglat_br.lat);
+    bbox.right = xy_br.x;
+    bbox.bottom = xy_br.y;
 
     return bbox;
 };
 
-LngLat lnglat(const float &x, const float &y)
+LngLat lnglat(const double &x, const double &y)
 {
     LngLat out;
-    float R2D = 180 / M_PI;
-    float A = 6378137.0;
+    double R2D = 180 / M_PI;
+    double A = 6378137.0;
     out.lng = x * R2D / A;
     out.lat = ((M_PI * 0.5) - 2.0 * atan(exp(-y / A))) * R2D;
 
     return out;
 };
 
-Tile tile(const float &lng, const float &lat, const int &zoom)
+Tile tile(const double &lng, const double &lat, const int &zoom)
 {
     Tile out_tile;
     out_tile.x = int(floor((lng + 180.0) / 360.0 * pow(2.0, zoom)));
 
-    float lat_ = M_PI * lat / 180;
+    double lat_ = M_PI * lat / 180;
     out_tile.y = int(floor(
         (1.0 - log(
                    tan(lat_) + (1.0 / cos(lat_))) /
@@ -226,18 +228,17 @@ std::vector<Tile> tiles(const LngLatBbox &llbbox, const int &zoom)
     vector<Tile> return_tiles;
     for (auto bbox : bboxes)
     {
-        float w = max(-180.0f, bbox.west);
-        float s = max(-85.051129f, bbox.south);
-        float e = min(180.0f, bbox.east);
-        float n = min(85.051129f, bbox.north);
+        double w = max(-180.0, bbox.west);
+        double s = max(-85.051129, bbox.south);
+        double e = min(180.0, bbox.east);
+        double n = min(85.051129, bbox.north);
 
         Tile ll = tile(w, s, zoom);
         Tile ur = tile(e, n, zoom);
-        std::cout << e << ' ' << n << std::endl;
+
         // Clamp left x and top y at 0.
         int llx = (ll.x < 0) ? 0 : ll.x;
         int ury = (ur.y < 0) ? 0 : ur.y;
-        std::cout << llx << ' ' << ury << std::endl;
 
         std::vector<int> x(min(ur.x + 1, int(pow(2, zoom))) - llx);
         std::iota(std::begin(x), std::end(x), llx);
@@ -290,7 +291,6 @@ Tile quadkey_to_tile(const std::string &qk)
     for (int i = zoom; i>0; i--)
     {
         int mask = 1 << (zoom-i);
-        cout<<mask<<endl;
         int digit = qk[i-1]-'0';
         switch (digit)
         {
@@ -308,7 +308,7 @@ Tile quadkey_to_tile(const std::string &qk)
                 ytile = ytile | mask;
                 break;
             default:
-                cout<< "Unexpected quadkey digit."<<endl;
+                throw "Unexpected quadkey digit.";
                 break;
         }
     }
