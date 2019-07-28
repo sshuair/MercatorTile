@@ -7,13 +7,6 @@ The tools provides `ul` function that return the upper left corner longitudes an
 You can check out the [Utility Functions](#utility-functions) or [examples](./examples/example.cpp).
 
 
-# Install
-```
-mkdir build && cd build
-cmake ..
-make
-```
-
 # How to use
 
 ```C++
@@ -67,6 +60,13 @@ cout<<ttile.x<<" "<<ttile.y<<" "<<ttile.z<<endl;
 
 - `quadkey_to_tile(const std::string &qk) -> Tile`: get the tile corresponding to a quadkey.
 
+# Install
+```
+mkdir build && cd build
+cmake ..
+make
+make install
+```
 
 # Reference
 
